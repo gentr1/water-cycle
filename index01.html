@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>snap.svg</title>
+		<style media="screen">
+            
+            #svg {
+                -moz-border-radius: 10px;
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+                //border: solid 2px #ccc;
+				position:fixed; top:0; left:0; height:50%; width:50%;
+				background-color:#e6ffff;
+                float: left;
+                //margin-right: 10px;
+                font: 1em source-sans-pro, Source Sans Pro, Helvetica, sans-serif;
+            }
+        </style>
+		
+		<script src="snap/snap.svg-min.js"></script>
+	</head>
+
+	<body>
+		<svg id="svg"></svg>
+		<script>
+			var s = Snap("#svg");
+			//s.style.height="800px"
+			var circle1 = s.circle(50, 350, 60);
+			var rect = s.rect(50, 290, 200, 120);
+			var circle2 = s.circle(250, 350, 60);
+			var circle3 = s.circle(80, 300, 55);
+			var circle4 = s.circle(180, 300, 90);
+			var f = s.filter(Snap.filter.shadow(8, 8, 10, '#000', 0.5));
+			var cloud = s.group(circle1, circle2, circle3, circle4, rect).transform('s0.6');
+			cloud.attr({
+			  fill: '#fff',
+			  //stroke: "#cccccc",
+			  //strokeWidth: 3
+			});
+			
+			var smallCloud1 = cloud.clone().transform('t200 -170s0.2');
+			var smallCloud2 = cloud.clone().transform('t100 -100s0.2');
+			var mediumCloud = cloud.clone().transform('t250 -80s0.5');
+
+			cloud.attr({
+			  filter: f
+			});
+			mediumCloud.attr({
+			  filter: f
+			});
+			cloud.animate({transform: 't600, 0'}, 20000);
+			mediumCloud.animate({transform: 't600 -80s0.5'}, 20000);
+			smallCloud1.animate({transform: 't400 -170s0.2'}, 15000);
+			smallCloud2.animate({transform: 't400 -100s0.2'}, 7500);
+			
+			setInterval(function() {
+			  cloud.transform('t-400 0');
+			  cloud.animate({transform: 't600, 0'}, 20000);
+			}, 20000);
+
+			setInterval(function() {
+			  mediumCloud.transform('t-400 -80s0.5');
+			  mediumCloud.animate({transform: 't600 -80s0.5'}, 20000);
+			}, 25000);
+
+			setInterval(function() {
+			  smallCloud1.transform('t-300 -170s0.2');
+			  smallCloud1.animate({transform: 't400 -170s0.2'}, 15000);
+			  smallCloud2.transform('t-200 -100s0.2');
+			  smallCloud2.animate({transform: 't400 -100s0.2'}, 7500);
+			}, 15000);
+			
+		</script>
+	</body>
+
+</html>
