@@ -10,7 +10,7 @@
                 -webkit-border-radius: 10px;
                 border-radius: 10px;
                 //border: solid 2px #ccc;
-				position:fixed; top:0; left:0; height:50%; width:50%;
+				position:fixed; top:0; left:0; //height:50%; width:50%;
 				background-color:#e6ffff;
                 float: left;
                 //margin-right: 10px;
@@ -24,52 +24,79 @@
 	<body>
 		<svg id="svg"></svg>
 		<script>
+		
+			var width = window.innerWidth*0.7;
+			console.log(width)
+			var height = width*0.6;//window.innerHeight;
+			document.getElementById('svg').style.width=width+"px";
+			document.getElementById('svg').style.height=height+"px";
 			var s = Snap("#svg");
 			//s.style.height="800px"
-			var circle1 = s.circle(50, 350, 60);
-			var rect = s.rect(50, 290, 200, 120);
-			var circle2 = s.circle(250, 350, 60);
-			var circle3 = s.circle(80, 300, 55);
-			var circle4 = s.circle(180, 300, 90);
+			var circle1 = s.circle(width/16.236, width/2.319, width/13.53);//s.circle(50, 350, 60);
+			var rect = s.rect(width/16.236, width/2.799, width/4.059, width/6.765);//s.rect(50, 290, 200, 120);
+			var circle2 = s.circle(width/3.2472, width/2.319, width/13.53);
+			var circle3 = s.circle(width/10.1475, width/2.706, width/14.76);
+			var circle4 = s.circle(width/4.51, width/2.706, width/9.02);
+			//var circle1 = s.circle(50, 350, width/19.2);
+			//var rect = s.rect(50, 290, 200, width/9.6);
+			//var circle2 = s.circle(250, 350, width/19.2);
+			//var circle3 = s.circle(80, 300, width/20.94);
+			//var circle4 = s.circle(180, 300, width/12.8);
 			var f = s.filter(Snap.filter.shadow(8, 8, 10, '#000', 0.5));
-			var cloud = s.group(circle1, circle2, circle3, circle4, rect).transform('s0.6');
+			
+			var cloud = s.group(circle1, circle2, circle3, circle4, rect).transform('t'+(-width/10)+' '+(-height/4)+'s0.0');
 			cloud.attr({
 			  fill: '#fff',
-			  //stroke: "#cccccc",
-			  //strokeWidth: 3
 			});
 			
-			var smallCloud1 = cloud.clone().transform('t200 -170s0.2');
-			var smallCloud2 = cloud.clone().transform('t100 -100s0.2');
-			var mediumCloud = cloud.clone().transform('t250 -80s0.5');
+			// 
+				
+				
+			//var smallCloud1 = cloud.clone().transform('t80 -170s0.2');
+			//var smallCloud2 = cloud.clone().transform('t80 -100s0.2');
+			//var mediumCloud = cloud.clone().transform('t100 -80s0.5');
 
 			cloud.attr({
 			  filter: f
 			});
-			mediumCloud.attr({
-			  filter: f
-			});
-			cloud.animate({transform: 't600, 0'}, 20000);
-			mediumCloud.animate({transform: 't600 -80s0.5'}, 20000);
-			smallCloud1.animate({transform: 't400 -170s0.2'}, 15000);
-			smallCloud2.animate({transform: 't400 -100s0.2'}, 7500);
+			//mediumCloud.attr({
+			//  filter: f
+			//});
 			
-			setInterval(function() {
-			  cloud.transform('t-400 0');
-			  cloud.animate({transform: 't600, 0'}, 20000);
-			}, 20000);
+			function nextFrame ( el, frameArray,  whichFrame ) {
+				if( whichFrame >= frameArray.length ) { return }
+				el.animate( frameArray[ whichFrame ].animation, frameArray[ whichFrame ].dur, nextFrame.bind( null, el, frameArray, whichFrame + 1 ) );
+			}
 
+			var cloud_frames = [{	animation: { transform: 't0, '+(-height/4)+'s0.5' }, dur: 2000 },
+									{   animation: { transform: 't'+(width*0.7)+', '+(-height/4)+'s0.6' ,fill: "silver"}, dur: 3000 },
+									{   animation: { transform: 't0, 0s0.0', fill: "#fff" }, dur: 1000 }];
+			
+			//cloud.animate({transform: 't600, '+(-height/4)+'s0.6'}, 4000);
+			nextFrame( cloud, cloud_frames, 0 );
+			//cloud.animate({transform: 't600, 0'}, 3000);
+			//cloud.animate({transform: 't600, 0s0.4'}, 20000);
+			//mediumCloud.animate({transform: 't600 -80s0.5'}, 20000);
+			//smallCloud1.animate({transform: 't400 -170s0.2'}, 15000);
+			//smallCloud2.animate({transform: 't400 -100s0.2'}, 7500);
+			/////////////////////
 			setInterval(function() {
-			  mediumCloud.transform('t-400 -80s0.5');
-			  mediumCloud.animate({transform: 't600 -80s0.5'}, 20000);
-			}, 25000);
+			  cloud.transform('t'+(-width/10)+' '+(-height/4)+'s0.0');
+			  //cloud.animate({transform: 't600, '+(-height/4)+'s0.6'}, 4000);
+			  nextFrame( cloud, cloud_frames, 0 );
+			}, 6000);
+			///////////////////////////
+			// setInterval(function() {
+			  // mediumCloud.transform('t-400 -80s0.5');
+			  // mediumCloud.animate({transform: 't600 -80s0.5'}, 20000);
+			// }, 25000);
 
-			setInterval(function() {
-			  smallCloud1.transform('t-300 -170s0.2');
-			  smallCloud1.animate({transform: 't400 -170s0.2'}, 15000);
-			  smallCloud2.transform('t-200 -100s0.2');
-			  smallCloud2.animate({transform: 't400 -100s0.2'}, 7500);
-			}, 15000);
+			// setInterval(function() {
+			  // smallCloud1.transform('t-300 -170s0.2');
+			  // smallCloud1.animate({transform: 't400 -170s0.2'}, 15000);
+			  // smallCloud2.transform('t-200 -100s0.2');
+			  // smallCloud2.animate({transform: 't400 -100s0.2'}, 7500);
+			// }, 15000);
 			
 		</script>
 	</body>
