@@ -19,22 +19,26 @@ body {
 
 	<body>
 		
-		<div id ="t3" style="color:gray;position: absolute;font-size:20px;">Underground water</div>
-		<div id ="t2" style="color:gray;position: absolute;font-size:20px;">Surface water</div>
-		<div id ="t1" style="color:gray;position: absolute;font-size:20px;">Ice/Permafrost</div>
-		<form action="">
-		  <input type="radio" name="quantity" onclick="handleClick(this);" value="1" > 0.1%<br>
-		  <input type="radio" name="quantity" onclick="handleClick(this);" value="5" checked> 1%<br>
-		  <input type="radio" name="quantity" onclick="handleClick(this);" value="10"> 10%<br>
+		<div id ="t3" style="color:gray;position: absolute;font-size:28px;">Underground water</div>
+		<div id ="t2" style="color:gray;position: absolute;font-size:28px;">Surface water</div>
+		<div id ="t1" style="color:gray;position: absolute;font-size:28px;">Ice/Permafrost</div>
+		<form action=""><range style="color:black;position: absolute;font-size:28px;">Choose the amount of water to send
+		  <input type="radio" name="quantity" onclick="handleClick(this);" value="1" > 0.1%
+		  <input type="radio" name="quantity" onclick="handleClick(this);" value="5" > 1%
+		  <input type="radio" name="quantity" onclick="handleClick(this);" value="7" > 5%
+		  <input type="radio" name="quantity" onclick="handleClick(this);" value="10" checked> 10% <br>Distribute 69.7% of the non-salty water to permafrost,<br> 0.3% to the surface, and 30% underground.</range>
 		  
 		</form>
 		<script type="text/javascript">
 
-	var currentValue = 5;
+	var currentValue = 10;
+	var counter_correct =0;
+	var listReservoirs={"t1":0,"t2":0,"t3":0};
 	var	rock;
 	var	rockOptions;
 	var Example = Example || {};
-	var size_table={1:10,5:20,10:25};
+	var size_table={1:7,5:12,7:20,10:25};
+	var conv={1:0.1,5:1.0,7:5.0,10:10.0};
 	var Engine = Matter.Engine,
 			Render = Matter.Render,
 			Runner = Matter.Runner,
@@ -73,10 +77,12 @@ body {
 		Runner.run(runner, engine);
 
 		// add bodies
-		var ground = Bodies.rectangle(395, 700, 815, 50, { isStatic: true });
-		rockOptions = { density: 0.004 ,render:{fillStyle:'#0099ff'}};
-		rock = Bodies.polygon(170, 450, 7, size_table[currentValue], rockOptions);//Bodies.polygon(170, 450, 8, 20, rockOptions),
-		anchor = { x: 170, y: 450 };
+		var ground = Bodies.rectangle(395, 720, 815, 50, { isStatic: true ,render:{fillStyle:'#00ff88'}});
+		rockOptions = { density: 0.004 ,render:{fillStyle:'#0099ff'},mid:currentValue};
+		rock = Bodies.polygon(150, 450, 7, size_table[currentValue], rockOptions);//Bodies.polygon(170, 450, 8, 20, rockOptions),
+		//rock.mid=currentValue;
+		//console.log(rock)
+		anchor = { x: 145, y: 450 };
 		elastic = Constraint.create({ 
 				pointA: anchor, 
 				bodyB: rock, 
@@ -93,30 +99,62 @@ body {
 		var shelf12 = Bodies.rectangle(610+(wdt/2), 175, 20, 50, { isStatic: true });
 		var shelf13 = Bodies.rectangle(610-(wdt/2), 175, 20, 50, { isStatic: true });
 		
+		//Matter.Vertices.contains(vertices, point)
+		
 		var shelf21 = Bodies.rectangle(610, 350, wdt, 20, { isStatic: true });
 		var shelf22 = Bodies.rectangle(610+(wdt/2), 325, 20, 50, { isStatic: true });
 		var shelf23 = Bodies.rectangle(610-(wdt/2), 325, 20, 50, { isStatic: true });
 		
-		var shelf31 = Bodies.rectangle(610, 500, wdt, 20, { isStatic: true });
-		var shelf32 = Bodies.rectangle(610+(wdt/2), 475, 20, 50, { isStatic: true });
-		var shelf33 = Bodies.rectangle(610-(wdt/2), 475, 20, 50, { isStatic: true });
+		var shelf31 = Bodies.rectangle(610, 550, wdt, 20, { isStatic: true });
+		var shelf32 = Bodies.rectangle(610+(wdt/2), 525, 20, 50, { isStatic: true });
+		var shelf33 = Bodies.rectangle(610-(wdt/2), 525, 20, 50, { isStatic: true });
+		
+		var collider1 = Bodies.rectangle(610, 150, wdt, 100, {
+			isSensor: true,
+			isStatic: true,
+			render: {
+				strokeStyle: "#0000ff",
+				fillStyle: 'transparent',
+				lineWidth: 1
+			}
+		});
+		var collider2 = Bodies.rectangle(610, 300, wdt, 100, {
+			isSensor: true,
+			isStatic: true,
+			render: {
+				strokeStyle: "#0000ff",
+				fillStyle: 'transparent',
+				lineWidth: 1
+			}
+		});
+		var collider3 = Bodies.rectangle(610, 500, wdt, 100, {
+			isSensor: true,
+			isStatic: true,
+			render: {
+				strokeStyle: "#0000ff",
+				fillStyle: 'transparent',
+				lineWidth: 1
+			}
+		});
 
-		document.getElementById("t1").style.left="610px";
-		document.getElementById("t1").style.top="200px";
-		document.getElementById("t2").style.left="610px";
-		document.getElementById("t2").style.top="350px";
-		document.getElementById("t3").style.left="610px";
+		document.getElementById("t1").style.left="470px";
+		document.getElementById("t1").style.top="150px";
+		document.getElementById("t2").style.left="470px";
+		document.getElementById("t2").style.top="290px";
+		document.getElementById("t3").style.left="470px";
 		document.getElementById("t3").style.top="500px";
 		
 		// var pyramid2 = Composites.pyramid(550, 0, 5, 10, 0, 0, function(x, y) {
 			// return Bodies.rectangle(x, y, 25, 40);
 		// });
 
-		World.add(engine.world, [ground,shelf11,shelf12,shelf13,shelf21,shelf22,shelf23,shelf31,shelf32,shelf33, rock, elastic]);
+		World.add(engine.world, [ground,shelf11,shelf12,shelf13,shelf21,shelf22,shelf23,shelf31,shelf32,shelf33, rock, elastic,collider1,collider2,collider3]);
 
 		Events.on(engine, 'afterUpdate', function() {
 			if (mouseConstraint.mouse.button === -1 && (rock.position.x > 190 || rock.position.y < 430)) {
+				rockOptions = { density: 0.004 ,render:{fillStyle:'#0099ff'},mid:currentValue};
 				rock = Bodies.polygon(170, 450, 7, size_table[currentValue], rockOptions);
+				//console.log(rock)
 				World.add(engine.world, rock);
 				elastic.bodyB = rock;
 			}
@@ -138,18 +176,76 @@ body {
 
 		// keep the mouse in sync with rendering
 		render.mouse = mouse;
+		render.options.background= 'img/background4.png';
 
 		// fit the render viewport to the scene
 		Render.lookAt(render, {
 			min: { x: 0, y: 0 },
 			max: { x: 800, y: 700 }
 		});
+		
+		Events.on(engine, 'collisionActive', function(event) {
+			var pairs = event.pairs;
+			var sum1=0.0, sum2=0.0,sum3=0.0;
+			listReservoirs={"t1":sum1,"t2":sum2,"t3":sum3};
+			
+			for (var i = 0, j = pairs.length; i != j; ++i) {
+				var pair = pairs[i];
+
+				if (pair.bodyA === collider1) {
+					pair.bodyB.render.fillStyle = "#0000ff";
+					sum1+=parseFloat(conv[pair.bodyB.mid]);
+					//console.log(pair.bodyB.id)
+				} else if (pair.bodyB === collider1) {
+					pair.bodyA.render.fillStyle =  "#0000ff";
+					sum1+=parseFloat(conv[pair.bodyA.mid]);
+					//console.log(pair.bodyA.id)
+				}
+				else if (pair.bodyA === collider2) {
+					pair.bodyB.render.fillStyle = "#0000ff";
+					sum2+=parseFloat(conv[pair.bodyB.mid]);
+					//console.log("ok")
+				} 
+				else if (pair.bodyB === collider2) {
+					pair.bodyA.render.fillStyle =  "#0000ff";
+					sum2+=parseFloat(conv[pair.bodyA.mid]);
+					//console.log("ok")
+				}
+				else if (pair.bodyA === collider3) {
+					pair.bodyB.render.fillStyle = "#0000ff";
+					sum3+=parseFloat(conv[pair.bodyB.mid]);
+					//console.log("ok")
+				} 
+				else if (pair.bodyB === collider3) {
+					pair.bodyA.render.fillStyle =  "#0000ff";
+					sum3+=parseFloat(conv[pair.bodyA.mid]);
+					//console.log("ok")
+				}
+				listReservoirs={"t1":sum1,"t2":sum2,"t3":sum3};
+				//console.log(listReservoirs)
+				document.getElementById("t1").innerHTML="Ice/Permafrost : "+listReservoirs["t1"].toFixed(1)+"%";
+				document.getElementById("t2").innerHTML="Surface water : "+listReservoirs["t2"].toFixed(1)+"%";
+				document.getElementById("t3").innerHTML="Underground water : "+listReservoirs["t3"].toFixed(1)+"%";
+				
+				
+				if ((listReservoirs["t1"].toFixed(1)== "69.7")&&(listReservoirs["t2"].toFixed(1)== "0.3")&&(listReservoirs["t3"].toFixed(1)== "30.0")){
+					counter_correct+=1;
+				}
+				
+				if( counter_correct==20){
+					window.alert("Well done! You have distributed water so that undergound volume is 30 times more important than the suface water volume...");
+				}
+				
+			}
+		});
+		
 
 		// context for MatterTools.Demo
 		return {
 			engine: engine,
 			runner: runner,
 			render: render,
+			
 			canvas: render.canvas,
 			stop: function() {
 				Matter.Render.stop(render);
@@ -181,8 +277,11 @@ body {
 		//	Matter.Body.scale(rock,2.0)
 		//}
 		//var tempid=rock.id;
+		rockOptions = { density: 0.004 ,render:{fillStyle:'#0099ff'},mid:currentValue};
 		rock = Bodies.polygon(170, 450, 7, size_table[currentValue], rockOptions);
+		//rock.mid=currentValue;
 		World.add(engine.world, rock);
+		//console.log(rock)
 		elastic.bodyB = rock;
 		//World.add(engine.world, rock);
 		//World.remove(engine.world, tempid);
