@@ -29,6 +29,9 @@ body {
 		  <input type="radio" name="quantity" onclick="handleClick(this);" value="10" checked> 10% <br>Distribute 69.7% of the non-salty water to permafrost,<br> 0.3% to the surface, and 30% underground.</range>
 		  
 		</form>
+		<div id="message" style="visibility:hidden;position: absolute;width:300px;background-color:white;font-size:28px;">
+			Well done! You have distributed water so that the undergound volume is 30 times more important than the suface water volume... <button type="button" style="font-size:28px;">next game!</button>
+		</div>
 		<script type="text/javascript">
 
 	var currentValue = 10;
@@ -144,6 +147,9 @@ body {
 		document.getElementById("t3").style.left="470px";
 		document.getElementById("t3").style.top="500px";
 		
+		document.getElementById("message").style.left="50px";
+		document.getElementById("message").style.top="150px";
+		
 		// var pyramid2 = Composites.pyramid(550, 0, 5, 10, 0, 0, function(x, y) {
 			// return Bodies.rectangle(x, y, 25, 40);
 		// });
@@ -228,12 +234,13 @@ body {
 				document.getElementById("t3").innerHTML="Underground water : "+listReservoirs["t3"].toFixed(1)+"%";
 				
 				
-				if ((listReservoirs["t1"].toFixed(1)== "69.7")&&(listReservoirs["t2"].toFixed(1)== "0.3")&&(listReservoirs["t3"].toFixed(1)== "30.0")){
+				if ((listReservoirs["t3"].toFixed(1)== "30.0")&&(listReservoirs["t1"].toFixed(1)== "69.7")&&(listReservoirs["t2"].toFixed(1)== "0.3")){
 					counter_correct+=1;
 				}
 				
-				if( counter_correct==20){
-					window.alert("Well done! You have distributed water so that undergound volume is 30 times more important than the suface water volume...");
+				if( counter_correct==200){
+					//window.alert("Well done! You have distributed water so that undergound volume is 30 times more important than the suface water volume...");
+					document.getElementById("message").style.visibility = "visible"
 				}
 				
 			}
