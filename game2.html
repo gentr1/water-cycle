@@ -13,7 +13,7 @@
 
 	<body>
 		<center>
-		<div id="mymessage" style="visibility:hidden;position: absolute;width:300px;background-color:white;font-size:28px;">
+		<div id="mymessage" style="position: absolute;width:300px;background-color:white;font-size:28px;visibility:hidden;">
 			Well done! You have now seen what the water cycle looks like... <button type="button" style="font-size:28px;" onclick="location.href='game3.html';">next game</button>
 		</div>
 		<h2>Solve the sliding tiles puzzle to see the water cycle</h2>
@@ -21,7 +21,10 @@
 		<img id="imgpuzzle" src="img/water-cycle.jpg" alt="sliding puzzle" />
 		</center>
 		<script type="text/javascript"> 
-			$(document).ready(function() { 
+			var sol=0;
+			$(document).ready(function() {
+			sol=0;			
+			//document.getElementById("mymessage").style.visibility = "hidden";
 			var settings = { 
 				rows: 3,                    // number of rows [3 ... 9] 
 				cols: 3,                    // number of columns [3 ... 9] 
@@ -44,8 +47,8 @@
 			 
 				// perform actions when the puzzle is solved sucessfully 
 				success: { 
-					fadeOriginal: false,    // cross-fade original image [true|false] 
-					callback: displayNext(),    // callback a user-defined function [function] 
+					fadeOriginal: true,    // cross-fade original image [true|false] 
+					callback: displayNext,    // callback a user-defined function [function] 
 											// the function is passed an object as its argument 
 											// which includes the fields 'moves' and 'seconds' 
 					callbackTimeout: 300    // time in ms after which the callback is called 
@@ -53,7 +56,7 @@
 			 
 				// animation speeds and settings 
 				animation: { 
-					shuffleRounds: 3,       // number of shuffle rounds [1 ... ] 
+					shuffleRounds: 1,       // number of shuffle rounds [1 ... ] 
 					shuffleSpeed: 800,      // time in ms to perform a shuffle round 
 					slidingSpeed: 200,      // time in ms for a single move 
 					fadeOriginalSpeed: 600  // time in ms to cross-fade original image 
@@ -68,12 +71,18 @@
 											// [0 ... 1] (0 means no display) 
 				} 
 			} 
-				document.getElementById("mymessage").style.visibility = "hidden"
+				
 				$('#imgpuzzle').jqPuzzle(settings); // apply to all images 
 			}); 
 			
 			function displayNext(){
-				document.getElementById("mymessage").style.visibility = "visible"
+				//document.getElementById("mymessage").style.visibility = "visible";
+				
+				//if (sol==1){
+					document.getElementById("mymessage").style.visibility = "visible";
+					console.log("well done")
+				//}
+				sol++;
 			}
 		</script> 
 		
