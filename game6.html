@@ -1,0 +1,97 @@
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Tangle document</title>
+	
+    <!-- Tangle -->
+    <script type="text/javascript" src="snap/Tangle.js"></script>
+
+    <!-- TangleKit (optional) -->
+    <link rel="stylesheet" href="css/TangleKit.css" type="text/css">
+    <script type="text/javascript" src="snap/TangleKit/mootools.js"></script>
+    <script type="text/javascript" src="snap/TangleKit/sprintf.js"></script>
+    <script type="text/javascript" src="snap/TangleKit/BVTouchable.js"></script>
+    <script type="text/javascript" src="snap/TangleKit/TangleKit.js"></script>
+	<style>
+		
+	</style>
+	
+	
+    <!-- example -->
+    <script type="text/javascript">
+
+		 
+	
+	
+	
+        function setUpTangle () {
+		
+            var element = document.getElementById("example1");
+            var tangle = new Tangle(element, {
+                initialize: function () {
+					this.water_litres = 0.0;
+                    this.kwh_per_litre_water_to_tap = 0.0012;
+					this.kwh_per_litre_waste_water_to_treat = 0.000792516;
+					this.hour_cycling_per_kwh = 0.1; // 100watts for one hour, therefore 0.1kw for 1hour
+                    this.miles_cycling_per_hour = 16.0;
+					this.km_cycling_per_hour = 16*1.60934;
+                },
+                update: function () {
+                    this.energy_to_tap = this.water_litres * this.kwh_per_litre_water_to_tap;
+					this.energy_from_sink = this.water_litres * this.kwh_per_litre_waste_water_to_treat;
+					this.total_energy = this.energy_to_tap+this.energy_from_sink;
+					this.nb_hour_cycling=(this.total_energy)/this.hour_cycling_per_kwh ; 
+					this.nb_miles_cycling=this.miles_cycling_per_hour * this.nb_hour_cycling;
+					this.nb_km_cycling=this.km_cycling_per_hour * this.nb_hour_cycling;
+					
+					
+					if (this.total==29591.0){
+						document.getElementById("mymessage").style.visibility = "visible";
+						console.log("well done");
+					}
+                }
+            });
+			
+			
+			
+        }
+		
+		Tangle.formats.mytime = function (value) {     // formats 0.42 as "42%"
+			var nb_h=parseInt(value);
+			var nb_m=parseInt(( value - Math.trunc(value))*60.0);
+			return " " + nb_h +" hours "+nb_m + " minutes";
+		};
+
+    </script>
+</head>
+
+<body onload="setUpTangle();">
+	<div id="mymessage" style="position: absolute;width:500px;background-color:white;font-size:20px;visibility:hidden;">
+		Well done! You now have a sense of scale for the amount of water embedded in everyday food. Did you know that the average quantity of embedded water per person per day is 3200 litres? <button type="button" style="font-size:28px;" onclick="location.href='game4.html';">next game</button>
+	</div>
+	<h2>Find how much energy is needed to bring water to your tap and treat it once it goes to the sink...</h2>
+	
+	In the UK, everybody use in average 150 litres of water per person per day. This water needs to be treated to be drinkable, and transported to the tap, and then once it goes to the sink, it needs to be treated again to be reusable.  
+
+	
+	
+    <p>Please tweak the sliders on the blue links until you find how much energy is needed to bring enough water to cater daily or three persons living in one house.</p>
+	<script type="text/javascript">
+		document.getElementById("mymessage").style.left="50px";
+		document.getElementById("mymessage").style.top="150px";
+	</script>
+    <div id="example1">
+	
+		In order to get <span data-var="water_litres" class="TKAdjustableNumber" data-min="0" data-max="1000" data-step="50" data-format="%.0f litres"></span> of drinkable water to your tap , you need to use <span data-var="energy_to_tap" data-format="%.5f kwh"></span>. In turn, the energy needed to treat the wasted water that goes in the sink is <span data-var="energy_from_sink" data-format="%.5f kwh"></span>
+		
+		So in total, the total energy needed to get the water to your tap and treat the waste is <span data-var="total_energy" data-format="%.5f kwh"></span>.
+		To produce that much energy, you would need to pedal on a bike generator for <span data-var="nb_hour_cycling" data-format="mytime"></span>(a typical bike generator can produce 100 watts for an hour).
+		That is the equivalent of cycling for <span data-var="nb_miles_cycling" data-format="%.1f miles"></span> or <span data-var="nb_km_cycling" data-format="%.1f km"></span>
+	
+		<!-- </br>The total amount of embedded water used to produce all the items in your shopping list is <b><span data-var="total" data-format="%.0f litres"> </b>of water</span>. -->
+    </div>
+	
+
+</body>
+</html>
